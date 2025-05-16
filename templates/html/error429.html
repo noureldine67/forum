@@ -1,0 +1,35 @@
+{% extends "html/base.html" %}
+
+{% block title %}Trop de tentatives - Mon Forum{% endblock %}
+
+{% block content %}
+<section class="container mt-5">
+    <h1 class="text-danger">Trop de tentatives détectées</h1>
+
+    <div class="text-center mb-4" aria-hidden="true" style="font-size: 3rem;">⚠️</div>
+
+    <p>
+        Vous avez tenté de vous connecter trop de fois en peu de temps.
+        <br>Merci de patienter <span id="timer" class="fw-bold">60</span> secondes avant une nouvelle tentative.
+    </p>
+
+    <div class="d-flex justify-content-center gap-3 mt-4">
+        <a href="{{ url_for('index') }}" class="btn btn-primary">Retour à l'accueil</a>
+        <a href="{{ url_for('login') }}" class="btn btn-secondary">Réessayer</a>
+    </div>
+</section>
+
+<script>
+    let timerElement = document.getElementById('timer');
+    let timeRemaining = parseInt(timerElement.innerText);
+
+    function updateTimer() {
+        if (timeRemaining > 0) {
+            timeRemaining--;
+            timerElement.innerText = timeRemaining;
+        }
+    }
+
+    setInterval(updateTimer, 1000);
+</script>
+{% endblock %}

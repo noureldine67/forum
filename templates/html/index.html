@@ -1,0 +1,65 @@
+{% extends "html/base.html" %}
+
+{% block title %}Accueil - Mon Forum{% endblock %}
+
+{% block content %}
+<section id="intro" class="container mt-5">
+    <h1 class="text-center mb-4">Bienvenue sur <span class="text-primary">Mon Forum</span> ! 🎉</h1>
+    <p class="lead text-center mb-5">
+        Cet espace est dédié aux échanges bienveillants, aux conseils, et aux discussions enrichissantes entre membres. 🤝
+        Que vous soyez inscrit ou simple visiteur, explorez les conversations ou rejoignez la communauté ! 🌍
+    </p>
+
+    <hr>
+
+    <h2 class="mt-4">Règles du Forum ⚖️</h2>
+    <ul class="list-group mb-5">
+        <li class="list-group-item">Pas d'insultes ni de propos haineux ou discriminatoires. 🚫</li>
+        <li class="list-group-item">Respect mutuel, même dans le désaccord. 🙏</li>
+        <li class="list-group-item">Contenus civilisés, pertinents et respectueux du sujet. 📝</li>
+        <li class="list-group-item">Pas de contenu inapproprié, illégal ou offensant. ⚠️</li>
+        <li class="list-group-item">Utilisez un langage correct (évitez les MAJUSCULES ou abus de ponctuation !!!). 🧑‍🏫</li>
+    </ul>
+
+    <hr>
+
+    <h2 class="mt-4">Explorez les différents sujets 🔍</h2>
+    <ul class="list-group">
+        <li class="list-group-item">
+            <a href="{{ url_for('comments', topic_filter='cooking') }}" class="h5 text-decoration-none">
+                <strong>🍳 Cuisine</strong> — Recettes, astuces & échanges gourmands. 🍴
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="{{ url_for('comments', topic_filter='sport') }}" class="h5 text-decoration-none">
+                <strong>⚽ Sport</strong> — Actualités sportives, entraînements, résultats. 🏅
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="{{ url_for('comments', topic_filter='religion') }}" class="h5 text-decoration-none">
+                <strong>⛪ Religion</strong> — Discussions interreligieuses et spirituelles. 🙌
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="{{ url_for('comments', topic_filter='philosophy') }}" class="h5 text-decoration-none">
+                <strong>🧠 Philosophie</strong> — Réflexions sur l'existence, l'éthique, la pensée. 💭
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="{{ url_for('comments', topic_filter='technology') }}" class="h5 text-decoration-none">
+                <strong>💻 Technologie</strong> — Innovations, outils numériques, découvertes. 🔧
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="{{ url_for('comments', topic_filter='entertainment') }}" class="h5 text-decoration-none">
+                <strong>🎬 Divertissement</strong> — Cinéma, musique, jeux, séries. 🎮
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a href="{{ url_for('comments', topic_filter='other') }}" class="h5 text-decoration-none">
+                <strong>🌍 Autres</strong> — Pour tout ce qui sort des sentiers battus ! 🔮
+            </a>
+        </li>
+    </ul>
+</section>
+{% endblock %}

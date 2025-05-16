@@ -1,0 +1,123 @@
+{% extends "html/base.html" %}
+
+{% block title %}Commentaires 💬{% endblock %}
+
+{% block content %}
+<section class="container mt-5">
+    {% if session.get('username') %}
+    <h2>Poster un commentaire 📝</h2>
+    <form id="comment_form">
+        {{ form_com.hidden_tag() }}
+
+        <div class="mb-3">
+            <label for="comment" class="form-label">Votre commentaire ✍️ :</label>
+            {{ form_com.comment(class="form-control", rows=4) }}
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">{{ form_com.topic.label }} 📌</label><br>
+            {{ form_com.topic(class="form-select") }}
+        </div>
+
+        <div class="d-flex justify-content-start">
+            {{ form_com.submit(class="btn btn-primary") }}
+        </div>
+    </form>
+    {% else %}
+    <p>
+        Vous devez être connecté pour poster un commentaire 🔒.
+        <a href="{{ url_for('login') }}" class="btn btn-link">Cliquez ici pour vous connecter 🔑.</a>
+    </p>
+    {% endif %}
+</section>
+
+<hr class="my-5">
+
+<section class="container mt-5">
+    <h2>Commentaires existants 💬</h2>
+
+    <div class="mb-4">
+        <h3>Filtrer les commentaires par sujet 🔍 :</h3>
+        <form method="GET" action="{{ url_for('comments') }}">
+            {{ form_filter.hidden_tag() }}
+            <div class="mb-3">
+                {{ form_filter.topic_filter.label }} 🏷️
+                {{ form_filter.topic_filter(class="form-select") }}
+            </div>
+            <div class="d-flex justify-content-start">
+                {{ form_filter.submit_filter(class="btn btn-secondary") }}
+            </div>
+        </form>
+    </div>
+
+    <div id="comment-scroll-box" class="border p-3 mb-5" style="max-height: 400px; overflow-y: auto;">
+        <ul class="list-group" id="comment-list">
+            {% if comments %}
+            {% for comment in comments|reverse %}
+            <li class="list-group-item">
+                <div class="d-flex justify-content-between">
+                    <strong>{{ comment.username }} 🧑‍💻</strong>
+                    <span class="text-muted">Posté le {{ comment.time }} 🕒</span>
+                </div>
+                <p class="mt-2"><strong>Sujet : </strong>{{ comment.topic_label }} 📚</p>
+                <p>{{ comment.comment }}</p>
+            </li>
+            {% endfor %}
+            {% endif %}
+        </ul>
+
+        {% if not comments %}
+        <p id="no-comments-msg">Aucun commentaire n'a encore été posté. 🙁</p>
+        {% endif %}
+
+    </div>
+
+</section>
+{% endblock %}
+{% block socket %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"
+    integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA=="
+    crossorigin="anonymous"></script>
+
+<script type="text/javascript">
+    var socket = io();
+
+    document.getElementById("comment_form").addEventListener("submit", function (e) {
+        e.preventDefault(); // Empêche l"envoi classique du formulaire
+
+        const comment = document.getElementById("comment").value;
+        const topic = document.getElementById("topic").value;
+
+        socket.emit("new_comment", {
+            comment: comment,
+            topic: topic
+        });
+        document.getElementById("comment").value = "";
+    });
+
+    socket.on("broadcast_comment", function (data) {
+        const commentList = document.getElementById("comment-list");
+
+        // Supprimer le message "Aucun commentaire"
+        const emptyMsg = document.getElementById("no-comments-msg");
+        if (emptyMsg) {
+            emptyMsg.remove();
+        }
+
+        const newComment = document.createElement("li");
+        newComment.className = "list-group-item";
+        newComment.innerHTML = `
+        <div class="d-flex justify-content-between">
+            <strong>${data.username} 🧑‍💻</strong>
+            <span class="text-muted">Posté le ${data.time} 🕒</span>
+        </div>
+        <p class="mt-2"><strong>Sujet : </strong>${data.topic_label} 📚</p>
+        <p>${data.comment}</p>
+    `;
+
+        commentList.prepend(newComment);
+    });
+
+
+</script>
+{% endblock %}
